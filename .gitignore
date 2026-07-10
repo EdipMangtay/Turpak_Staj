@@ -2,14 +2,23 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+.eggs/
+build/
+dist/
 .venv/
 venv/
+env/
 .env
 
 # Jupyter
 .ipynb_checkpoints/
 
-# macOS
+# IDE / editor
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
 .DS_Store
 
 # Şirket eğitim sunumları — GitHub'a yüklenmez

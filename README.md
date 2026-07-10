@@ -1,6 +1,6 @@
 # Turpak – Staj Çalışmaları
 
-Bu depo, **Turpak** stajım süresince geliştirdiğim çalışmaları, prototipleri ve tamamladığım taskları içerir.
+Bu depo, **Turpak** stajım süresince geliştirdiğim çalışmaları, prototipleri ve tamamladığım taskları içerir. Amaç, ATG / akaryakıt otomasyon sistemleri üzerine öğrendiklerimi kod örnekleriyle belgelemektir.
 
 **Stajyer:** Ali Edip Mangtay
 
@@ -43,6 +43,7 @@ Staj/
 
 ```bash
 pip install -r eda/requirements.txt
+pip install numpy matplotlib
 ```
 
 ## Hızlı başlangıç
@@ -66,7 +67,22 @@ jupyter notebook notebooks/GUN08_feature_engineering.ipynb
 
 ### 1. Strapping Table (Cetvel) Interpolasyon Modeli
 
-Yatay silindirik akaryakıt tankında seviye–hacim ilişkisi doğrusal değildir. Script geometriden tam eğriyi hesaplar, cetvel tablosu oluşturur ve interpolasyon hatasını ölçer.
+Yatay silindirik bir akaryakıt tankında **seviye ile hacim arasındaki ilişki doğrusal değildir**: tankın ortasında 1 cm'lik seviye değişimi çok daha fazla litreye karşılık gelirken, alt ve üst kısımlarda daha az litreye karşılık gelir.
+
+ATG / otomasyon sistemleri bu yüzden bir **cetvel tablosu (strapping table)** tutar. Bu script:
+
+1. Tank geometrisinden tam seviye → hacim eğrisini hesaplar,
+2. Cetvel tablosu oluşturur,
+3. Doğrusal interpolasyonu uygular,
+4. İnterpolasyon hatasını ölçer.
+
+#### Örnek Çıktı
+
+```
+Tank: R=1.2 m, L=8.0 m, full volume = 36,191 L
+10 cm table ->  25 rows | max |error| =   75.4 L
+25 cm table ->  10 rows | max |error| =  941.8 L
+```
 
 ```bash
 python strapping_table_model.py
