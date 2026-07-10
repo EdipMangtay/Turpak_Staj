@@ -1,0 +1,33 @@
+istasyon_kodu,tank_no,urun_no,akaryakit_turu,kapasite,tank_capi,tank_uzunlugu,bolmeli,bolme_grup_no,is_manifold,manifold_grup_no
+IST_001,1,7,Motorin(Excellium),23000,250,468552,0,0,1,1
+IST_001,2,16,KB 95 Oktan Excellium,7000,250,142603,0,0,0,0
+IST_001,3,7,Motorin(Excellium),10000,250,203718,0,0,1,1
+IST_001,4,16,KB 95 Oktan Excellium,20000,250,407437,0,0,0,0
+IST_001,5,7,Motorin(Excellium),30000,285,470264,0,0,0,0
+IST_002,1,7,Motorin(Excellium),23000,250,468552,0,0,0,0
+IST_002,2,16,KB 95 Oktan Excellium,10000,250,203718,0,0,0,0
+IST_002,3,7,Motorin(Excellium),20000,250,407437,0,0,0,0
+IST_002,4,16,KB 95 Oktan Excellium,7000,250,142603,0,0,0,0
+IST_002,5,7,Motorin(Excellium),30000,285,470264,0,0,0,0
+IST_003,1,7,Motorin(Excellium),23000,250,468552,0,0,0,0
+IST_003,2,16,KB 95 Oktan Excellium,20000,250,407437,1,1,0,0
+IST_003,3,7,Motorin(Excellium),10000,250,203718,1,1,0,0
+IST_004,1,7,Motorin(Excellium),30000,285,470264,0,0,0,0
+IST_004,2,16,KB 95 Oktan Excellium,10000,250,203718,0,0,1,1
+IST_004,3,7,Motorin(Excellium),23000,250,468552,0,0,0,0
+IST_004,4,16,KB 95 Oktan Excellium,10000,250,203718,0,0,1,1
+IST_004,5,7,Motorin(Excellium),20000,250,407437,0,0,0,0
+IST_005,1,7,Motorin(Excellium),23000,250,468552,0,0,1,1
+IST_005,2,16,KB 95 Oktan Excellium,7000,250,142603,0,0,0,0
+IST_005,3,7,Motorin(Excellium),23000,250,468552,0,0,1,1
+IST_006,1,7,Motorin(Excellium),23000,250,468552,0,0,0,0
+IST_006,2,16,KB 95 Oktan Excellium,20000,250,407437,0,0,0,0
+IST_006,3,7,Motorin(Excellium),10000,250,203718,0,0,0,0
+IST_006,4,16,KB 95 Oktan Excellium,7000,250,142603,0,0,0,0
+IST_007,1,7,Motorin(Excellium),30000,285,470264,0,0,0,0
+IST_007,2,16,KB 95 Oktan Excellium,10000,250,203718,0,0,1,1
+IST_007,3,7,Motorin(Excellium),23000,250,468552,0,0,0,0
+IST_007,4,16,KB 95 Oktan Excellium,10000,250,203718,0,0,1,1
+IST_008,1,7,Motorin(Excellium),23000,250,468552,0,0,0,0
+IST_008,2,16,KB 95 Oktan Excellium,7000,250,142603,0,0,0,0
+IST_008,3,7,Motorin(Excellium),20000,250,407437,0,0,0,0

@@ -1,0 +1,8 @@
+# Feature dataset çıktıları
+
+- `features_30min.csv`
+- `features_daily.csv`
+- `features_manifold.csv`
+- `features_merged_30min.csv`
+
+Üretmek için: `python build_master.py` ardından `python run_fe.py`
