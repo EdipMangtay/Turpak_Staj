@@ -5,7 +5,7 @@
 import json
 from pathlib import Path
 
-OUT = Path(__file__).parent / "notebooks"
+OUT = Path(__file__).resolve().parents[2] / "feature_engineering" / "notebooks"
 
 
 def nb(cells):
@@ -43,8 +43,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-# feature_engineering/notebooks/ veya feature_engineering/ içinden çalıştır
 ROOT = Path.cwd()
 if ROOT.name == 'notebooks':
     FE_ROOT = ROOT.parent
@@ -58,9 +58,15 @@ sys.path.insert(0, str(EDA_ROOT))
 sys.path.insert(0, str(FE_ROOT))
 
 from utils.data_loader import load_all
-from utils.plots import setup_style
+from fe_utils.fe_plots import (
+    setup_fe_style, show_fig, plot_vardiya_counts, plot_hourly_kk,
+    plot_gece_gunduz_box, plot_kk_oran_vs_satis, plot_sicaklik_features,
+    plot_rolling_ma_example, plot_kum_egim_distribution, plot_manifold_ters_yon,
+    plot_category_feature_means, plot_anomaly_rate_by_tank,
+)
 
-setup_style()
+setup_fe_style()
+%matplotlib inline
 pd.set_option('display.max_columns', 60)
 
 dfs = load_all()
@@ -131,6 +137,11 @@ ue1t['vardiya'] = ue1t['saat'].apply(vardiya)
 print(ue1t['vardiya'].value_counts())
 print('\\ngece oranı:', ue1t['gece'].mean().round(3))"""),
 
+    code("""# Görselleştirme — zaman
+plot_vardiya_counts(ue1t)
+plot_hourly_kk(ue1t)
+plot_gece_gunduz_box(ue1t)"""),
+
     md("""## 2) Satış–kayıp oranı
 
 **Gerekçe:** Mutlak `kayip_kazanc` litre cinsinden yanıltıcı — büyük tankta 10L
@@ -155,6 +166,15 @@ ue1t['satisiz_kayip'] = (
 ).astype(int)
 
 print(ue1t[['kayip_kazanc', 'pompa_satis', 'kk_oran', 'satisiz_kayip']].describe())"""),
+
+    code("""# Görselleştirme — kk_oran
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+ue1t['kk_oran_abs'].dropna().clip(0, 0.5).hist(bins=50, ax=axes[0], edgecolor='k', alpha=0.75)
+axes[0].set_title('kk_oran_abs dağılımı')
+ue1t['satisiz_kayip'].value_counts().plot(kind='bar', ax=axes[1], color='coral', edgecolor='k')
+axes[1].set_title('satisiz_kayip (0/1)')
+plt.tight_layout(); show_fig()
+plot_kk_oran_vs_satis(ue1t)"""),
 
     md("""## 3) Sıcaklık değişimi
 
@@ -188,6 +208,9 @@ ue1t['sicaklik_kayip_korelasyon'] = (
 
 ue1t[['sicaklik', 'sicaklik_fark', 'sicaklik_gunluk_sapma', 'sicaklik_kayip_korelasyon']].describe()"""),
 
+    code("""# Görselleştirme — sıcaklık feature
+plot_sicaklik_features(ue1t)"""),
+
     md("""## 4) Hareketli ortalama
 
 **Gerekçe:** Tek dönemlik `kayip_kazanc` gürültülü (ölçüm hatası, ani satış
@@ -214,6 +237,10 @@ ue1t = (
 
 ue1t[['kayip_kazanc', 'kayip_kazanc_ma_3', 'kayip_kazanc_ma_6',
       'kayip_kazanc_ma_48', 'kk_oran_ma_6']].describe()"""),
+
+    code("""# Görselleştirme — rolling MA
+plot_rolling_ma_example(ue1t, 'IST_001', 1)
+plot_rolling_ma_example(ue1t, 'IST_002', 5)"""),
 
     md("""## 5) Kümülatif eğim
 
@@ -261,6 +288,15 @@ ue1t = (
 )
 
 ue1t[['kumulatif_kayip_kazanc', 'kum_egim', 'kum_egim_r2']].describe()"""),
+
+    code("""# Görselleştirme — kümülatif eğim
+plot_kum_egim_distribution(ue1t)
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.scatter(ue1t['kum_egim'].dropna(), ue1t.loc[ue1t['kum_egim'].notna(), 'kum_egim_r2'],
+           alpha=0.15, s=5, c='darkgreen')
+ax.set_xlabel('kum_egim'); ax.set_ylabel('kum_egim_r2')
+ax.set_title('Eğim vs R² (statik sızıntı = negatif eğim + yüksek R²)')
+plt.tight_layout(); show_fig()"""),
 
     md("""## 6) Manifold eş-tank kazancı
 
@@ -310,6 +346,18 @@ ue1t.drop(columns=['grup_toplam_kk', 'grup_tank_sayisi'], inplace=True)
 print('Manifold satır sayısı:', mask.sum())
 ue1t.loc[mask, ['kayip_kazanc', 'es_tank_kk_ort', 'es_tank_ters_yon']].describe()"""),
 
+    code("""# Görselleştirme — manifold
+plot_manifold_ters_yon(ue1t)
+# örnek çift: IST_001 T1 vs T3
+st, ta, tb = 'IST_001', 1, 3
+fig, ax = plt.subplots(figsize=(14, 4))
+for tk, c in [(ta, 'steelblue'), (tb, 'coral')]:
+    g = ue1t[(ue1t.istasyon_kodu==st)&(ue1t.tank_no==tk)].sort_values('saat_1').iloc[:48*7]
+    ax.plot(g['saat_1'], g['kayip_kazanc'].cumsum(), lw=1, label=f'T{tk}', color=c)
+ax.axhline(0, color='k', lw=0.5)
+ax.legend(); ax.set_title(f'{st} Manifold T{ta}↔T{tb} kümülatif kk')
+plt.tight_layout(); show_fig()"""),
+
     md("""## Feature seti — birleştirme ve kaydetme
 
 Ground truth'u sadece **kontrol/etiket** amacıyla ekliyoruz (`anomali_etiketi`,
@@ -344,6 +392,15 @@ features.to_csv(out_path, index=False)
 print('Kaydedildi:', out_path, features.shape)
 features.head()"""),
 
+    code("""# Görselleştirme — etiket dağılımı
+print('Anomali oranı:', features['anomali_etiketi'].mean().round(4))
+fig, ax = plt.subplots(figsize=(10, 4))
+features['anomali_kategorisi'].fillna('normal').value_counts().head(12).plot(
+    kind='barh', ax=ax, color='steelblue', edgecolor='k')
+ax.set_title('Kategori dağılımı (features.csv)')
+plt.tight_layout(); show_fig()
+plot_anomaly_rate_by_tank(features)"""),
+
     md("""## Hızlı sağlık kontrolü
 
 Her feature grubunun ilgili alarm kategorisinde gerçekten ayrıştığını
@@ -366,6 +423,13 @@ kategoriler = [
 ]
 mevcut = [k for k in kategoriler if k in ozet.index]
 ozet.loc[mevcut]"""),
+
+    code("""# Görselleştirme — kategori × feature heatmap
+check_cols = [
+    'kk_oran_abs', 'sicaklik_fark', 'sicaklik_kayip_korelasyon',
+    'kayip_kazanc_ma_48', 'kum_egim', 'kum_egim_r2', 'es_tank_ters_yon',
+]
+plot_category_feature_means(features, check_cols)"""),
 
     md("""**Yorum yeri (kodu çalıştırdıktan sonra doldur):**
 - `kk_oran_abs`: pompa_kalibrasyon / dinamik_sizinti'de normal'e göre ne kadar yüksek?

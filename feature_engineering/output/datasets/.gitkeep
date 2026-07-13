@@ -5,4 +5,4 @@
 - `features_manifold.csv`
 - `features_merged_30min.csv`
 
-Üretmek için: `python build_master.py` ardından `python run_fe.py`
+Üretmek için: proje kökünden `python build_master.py --fe` ardından `python run_fe.py`

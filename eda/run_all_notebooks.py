@@ -26,8 +26,9 @@ def main():
         print(f"\n{'='*60}\nÇalıştırılıyor: {nb}\n{'='*60}")
         r = subprocess.run(
             [sys.executable, "-m", "jupyter", "nbconvert", "--to", "notebook",
-             "--execute", str(path), "--ExecutePreprocessor.timeout=300"],
-            cwd=str(root),
+             "--execute", str(path), f"--ExecutePreprocessor.timeout=300",
+             "--output", path.name, "--output-dir", str(path.parent)],
+            cwd=str(nb_dir),
         )
         if r.returncode != 0:
             print(f"HATA: {nb}")
@@ -39,8 +40,9 @@ def main():
         print(f"\n{'='*60}\nÇalıştırılıyor: EDA_Master.ipynb\n{'='*60}")
         r = subprocess.run(
             [sys.executable, "-m", "jupyter", "nbconvert", "--to", "notebook",
-             "--execute", str(master), "--ExecutePreprocessor.timeout=600"],
-            cwd=str(root),
+             "--execute", str(master), f"--ExecutePreprocessor.timeout=600",
+             "--output", master.name, "--output-dir", str(master.parent)],
+            cwd=str(nb_dir),
         )
         if r.returncode != 0:
             sys.exit(r.returncode)

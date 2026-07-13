@@ -7,13 +7,15 @@ from pathlib import Path
 
 def main():
     root = Path(__file__).parent
+    project = root.parent
     nb = root / "notebooks" / "FE_Master.ipynb"
     if not nb.exists():
-        subprocess.run([sys.executable, str(root / "build_master.py")], check=True)
+        subprocess.run([sys.executable, str(project / "build_master.py"), "--fe"], check=True)
     print(f"Çalıştırılıyor: {nb.name}")
     r = subprocess.run(
         [sys.executable, "-m", "jupyter", "nbconvert", "--to", "notebook",
-         "--execute", str(nb), "--ExecutePreprocessor.timeout=600"],
+         "--execute", str(nb), f"--ExecutePreprocessor.timeout=600",
+         "--output", nb.name, "--output-dir", str(nb.parent)],
         cwd=str(root),
     )
     sys.exit(r.returncode)

@@ -25,15 +25,17 @@ Bu depo, **Turpak** stajım süresince geliştirdiğim çalışmaları, prototip
 
 ```
 Staj/
-├── data/                          # Sentetik CSV'ler (8 tablo + features.csv)
-│   └── ground_truth/              # ML etiketleri
-├── eda/                           # Keşifsel veri analizi
+├── build_master.py                # Tek build script (EDA + FE master)
+├── data/
+├── eda/
 │   ├── notebooks/                 # 01–10 ayrı notebook'lar
 │   ├── EDA_Master.ipynb           # Birleşik EDA
+│   ├── archive/                   # Eski EDA_Tam_Rehber
 │   └── utils/
 ├── feature_engineering/
-│   ├── notebooks/GUN08_feature_engineering.ipynb
+│   ├── notebooks/                 # GUN08 + FE_Master
 │   └── fe_utils/
+├── scripts/archive/                 # Eski build scriptleri (referans)
 └── wetstock_generator.py
 ```
 
@@ -49,16 +51,21 @@ pip install numpy matplotlib
 ## Hızlı başlangıç
 
 ```bash
+# Master notebook'ları oluştur (EDA + FE)
+python build_master.py
+
+# Sadece EDA veya FE
+python build_master.py --eda
+python build_master.py --fe
+
 # Sentetik veri üret
 python wetstock_generator.py
 
-# EDA
-cd eda && python build_master.py
-jupyter notebook EDA_Master.ipynb
+# EDA çalıştır
+cd eda && jupyter notebook EDA_Master.ipynb
 
 # Feature engineering (Gün 8)
-cd ../feature_engineering && python build_gun8_notebook.py
-jupyter notebook notebooks/GUN08_feature_engineering.ipynb
+cd feature_engineering && jupyter notebook notebooks/GUN08_feature_engineering.ipynb
 ```
 
 ---
